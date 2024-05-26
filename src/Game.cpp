@@ -37,9 +37,16 @@ Game::Game(string filename)
     auto instruction = line[0];
     switch (instruction)
     {
-    case '@':
-      cout << "Found a room on line " << lineNumber << endl;
+    case '#':
+      // skip comments
       break;
+    case '@':
+    {
+      string name = line.substr(2, line.find(" ", 2) - 2);
+
+      cout << "Found a place " << name << " on line " << lineNumber + 1 << endl;
+    }
+    break;
     default:
       cout << "Unknown instruction " << instruction << " on " << lineNumber << endl;
       break;
