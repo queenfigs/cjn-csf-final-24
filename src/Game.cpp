@@ -28,15 +28,23 @@ Game::Game(string filename)
   int lineNumber = 0;
   while (getline(sourceFile, line))
   {
-    if (line[0] == '@')
-    {
-      cout << "Found a place on line " << lineNumber + 1 << endl;
-    }
-
     lineNumber++;
+    if (line.length() == 0)
+    {
+      // skip empty linesbreak;
+      continue;
+    }
+    auto instruction = line[0];
+    switch (instruction)
+    {
+    case '@':
+      cout << "Found a room on line " << lineNumber << endl;
+      break;
+    default:
+      cout << "Unknown instruction " << instruction << " on " << lineNumber << endl;
+      break;
+    }
   }
-  cout << "Read " << lineNumber << " lines from " << filename << endl;
-
   // close the file
   sourceFile.close();
 }
