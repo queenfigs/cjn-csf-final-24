@@ -1,1 +1,10 @@
 # This is where the game will be defined.
+@ Apartment You are in your dingey 1 bedroom 1 bath apartment.
+@ Hallway You stand in the hallway of your complex, lights flickering above you.
+
+^ Apartment N Hallway
+^ Hallway S Apartment
+
+$ Mailbox You see the mailbox for the complex, one of your neighbors slots are open.
+$ Package Inside your neighbors mailbox you find a cardboard box with stamps from several countries, tape wraps its casing "Fragile". 
+

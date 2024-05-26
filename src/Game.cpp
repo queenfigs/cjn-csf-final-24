@@ -28,6 +28,11 @@ Game::Game(string filename)
   int lineNumber = 0;
   while (getline(sourceFile, line))
   {
+    if (line[0] == '@')
+    {
+      cout << "Found a place on line " << lineNumber + 1 << endl;
+    }
+
     lineNumber++;
   }
   cout << "Read " << lineNumber << " lines from " << filename << endl;
