@@ -1,9 +1,12 @@
 // Copyright © 2024 - Cleo Naughton
 
-#include "Game.h"
 #include <string>
 #include <iostream>
+#include <map>
 #include <fstream>
+
+#include "Game.h"
+#include "Place.h"
 
 using namespace std;
 
@@ -24,6 +27,8 @@ Game::Game(string filename)
     exit(1);
   }
 
+  // store map from place names to places.
+  map<string, Place *> places;
   string line;
   int lineNumber = 0;
   while (getline(sourceFile, line))
@@ -45,7 +50,8 @@ Game::Game(string filename)
       // line = "@ Apartment You are in your dingey 1 bedroom 1 bath apartment."
       int indexAfterName = line.find(" ", 2);
       string name = line.substr(2, indexAfterName - 2);
-
+      // save this place by name.
+      places[name] = new Place(name);
       cout << "Found a place " << name << " on line " << lineNumber + 1 << endl;
     }
     break;
@@ -57,6 +63,12 @@ Game::Game(string filename)
       char dir = line[indexAfterName + 1];
       string destination = line.substr(indexAfterName + 3);
       cout << "Found a direction from " << placeName << " " << dir << " to " << destination << " on line " << lineNumber + 1 << endl;
+
+      // find the places
+      auto src = places[placeName];
+      auto dst = places[destination];
+      // add the exit
+      src->addExit(dir, dst);
     }
     break;
 
