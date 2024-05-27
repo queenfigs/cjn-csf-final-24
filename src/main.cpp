@@ -1,9 +1,10 @@
 // Copyright © 2024 - Cleo Naughton
 
 #include <iostream>
-#include "Game.h"
 
 using namespace std;
+
+#include "Game.h"
 
 int main()
 {

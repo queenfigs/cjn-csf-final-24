@@ -3,21 +3,24 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <string>
-#include <map>
 #include "Place.h"
-
-using namespace std;
+#include "Thing.h"
 
 class Player
 {
 private:
   Place *location;
+  Thing *things = nullptr;
 
 public:
   Player(Place *startingLocation);
   Place *getLocation();
-  void move(char direction);
+  int move(char direction);
+  Thing *getThings();
+  void addThing(Thing *thing);
+  void removeThing(Thing *thing);
+  void takeThing(Thing *thing);
+  void dropThing(Thing *thing);
 };
 
 #endif // PLAYER_H

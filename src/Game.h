@@ -4,9 +4,8 @@
 #define GAME_H
 
 #include <string>
-#include "Player.h"
 
-using namespace std;
+#include "Player.h"
 
 class Game
 {
