@@ -31,10 +31,10 @@ Game::Game(string filename)
     lineNumber++;
     if (line.length() == 0)
     {
-      // skip empty linesbreak;
+      // skip empty lines
       continue;
     }
-    auto instruction = line[0];
+    char instruction = line[0];
     switch (instruction)
     {
     case '#':
@@ -42,11 +42,24 @@ Game::Game(string filename)
       break;
     case '@':
     {
-      string name = line.substr(2, line.find(" ", 2) - 2);
+      // line = "@ Apartment You are in your dingey 1 bedroom 1 bath apartment."
+      int indexAfterName = line.find(" ", 2);
+      string name = line.substr(2, indexAfterName - 2);
 
       cout << "Found a place " << name << " on line " << lineNumber + 1 << endl;
     }
     break;
+    case '^':
+    {
+      // line = "^ Apartment N Hallway"
+      int indexAfterName = line.find(" ", 2);
+      string placeName = line.substr(2, indexAfterName - 2);
+      char dir = line[indexAfterName + 1];
+      string destination = line.substr(indexAfterName + 3);
+      cout << "Found a direction from " << placeName << " " << dir << " to " << destination << " on line " << lineNumber + 1 << endl;
+    }
+    break;
+
     default:
       cout << "Unknown instruction " << instruction << " on " << lineNumber << endl;
       break;
