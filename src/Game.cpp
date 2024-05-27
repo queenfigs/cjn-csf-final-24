@@ -7,6 +7,7 @@
 
 #include "Game.h"
 #include "Place.h"
+#include "Player.h"
 
 using namespace std;
 
@@ -50,8 +51,9 @@ Game::Game(string filename)
       // line = "@ Apartment You are in your dingey 1 bedroom 1 bath apartment."
       int indexAfterName = line.find(" ", 2);
       string name = line.substr(2, indexAfterName - 2);
+      string desc = line.substr(indexAfterName + 1);
       // save this place by name.
-      places[name] = new Place(name);
+      places[name] = new Place(name, desc);
       cout << "Found a place " << name << " on line " << lineNumber + 1 << endl;
     }
     break;
@@ -60,7 +62,7 @@ Game::Game(string filename)
       // line = "^ Apartment N Hallway"
       int indexAfterName = line.find(" ", 2);
       string placeName = line.substr(2, indexAfterName - 2);
-      char dir = line[indexAfterName + 1];
+      char dir = char(tolower(line[indexAfterName + 1]));
       string destination = line.substr(indexAfterName + 3);
       cout << "Found a direction from " << placeName << " " << dir << " to " << destination << " on line " << lineNumber + 1 << endl;
 
@@ -79,9 +81,38 @@ Game::Game(string filename)
   }
   // close the file
   sourceFile.close();
+
+  // hack we will decide what is the starting place later.
+  this->player = new Player(places["Apartment"]);
 }
 
 void Game::run()
 {
   cout << "Game run() called" << endl;
+
+  bool gameOver = false;
+  while (!gameOver)
+  {
+    cout << "You are in " << this->player->getLocation()->getName() << endl;
+    cout << "Where would you like to go? (N, S, E, W, Q)" << endl;
+    char direction;
+    cin >> direction;
+    switch (char(tolower(direction)))
+    {
+    case 'n':
+    case 's':
+    case 'e':
+    case 'w':
+      this->player->move(direction);
+      break;
+    case 'q':
+      gameOver = true;
+      break;
+    case 'd':
+      cout << this->player->getLocation()->getDesc() << endl;
+      break;
+    default:
+      cout << "N: North, S: South, E: East, W: West, Q: Quit" << endl;
+    }
+  }
 }
