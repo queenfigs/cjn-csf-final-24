@@ -10,10 +10,13 @@
 class Game
 {
 private:
+  // private for the player obv
   Player *player;
 
 public:
+  // constructor that passes game file
   Game(string filename);
+  // starts game and reads input to print results, ie: N to direction to place
   void run();
 };
 
