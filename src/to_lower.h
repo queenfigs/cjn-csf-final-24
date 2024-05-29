@@ -7,14 +7,8 @@
 
 using namespace std;
 
-/**
- * Convert a string to lowercase.
- *
- * This fulfills the assignment requirement of using a function.
- *
- * @param s The string to convert.
- * @return The lowercase version of the string.
- */
+// Convert a string to lowercase.
+// This fulfills the assignment requirement of using a function :p.
 string to_lower(string s);
 
 #endif // TO_LOWER_H

@@ -18,24 +18,26 @@ private:
   Thing *nextThing;
 
 public:
+  // the thing constructor
   Thing(string name, string desc);
+
+  // returns the name
   string getName();
+
+  // returns the description
   string getDesc();
+
+  // returns the next Thing in the linked list
   Thing *getNextThing();
-  /**
-   * Add a thing to the list of things.
-   * Things are always added to the end of the list.
-   *
-   * @param thing the thing to add
-   * @return the thing that was added
-   */
+
+  // sets next thing to null
+  void nullNextThing();
+
+  // Add a thing to the list of things.
+  // Things are always added to the end of the list.
   Thing *addThing(Thing *thing);
-  /**
-   * Remove a thing from the list of things.
-   *
-   * @param thing the thing to remove
-   * @return the thing that was removed
-   */
+
+  // Remove a thing from the list of things.
   Thing *removeThing(Thing *thing);
 };
 
