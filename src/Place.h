@@ -3,7 +3,9 @@
 #ifndef PLACE_H
 #define PLACE_H
 
+// where I learned about maps :)
 // https://cplusplus.com/reference/map/map/
+// https://www.udacity.com/blog/2020/03/c-maps-explained.html
 #include <map>
 #include <string>
 

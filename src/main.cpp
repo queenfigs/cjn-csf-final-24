@@ -10,7 +10,7 @@ int main()
 {
   cout << "Cleo Naughton's Final CSF Spring 2024 Project" << endl;
 
-  auto adv = new Game("../src/game.txt");
+  Game *game = new Game("../src/game.txt");
 
-  adv->run();
+  game->run();
 }

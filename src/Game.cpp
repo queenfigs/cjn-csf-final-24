@@ -14,14 +14,12 @@ using namespace std;
 
 Game::Game(string filename)
 {
-  // cout << "Game constructor called with " << filename << endl;
-
   // here we are using file i/o to load the game from a file.
   ifstream sourceFile(filename);
   // check to see if it the file was opened.
   if (sourceFile.is_open())
   {
-    // cout << "Loading game from " << filename << "..." << endl;
+    cout << "Loading game from " << filename << "..." << endl;
   }
   else
   {
@@ -30,19 +28,24 @@ Game::Game(string filename)
     exit(1);
   }
 
-  // the first place we find will be the starting place.
+  // the first place we find in the input file will be the player's starting place.
   Place *startPlace = nullptr;
+
   // store map from place names to places.
   map<string, Place *> places;
+
   // store map from thing names to things.
   map<string, Thing *> things;
 
   // read each line of input file into line
   string line;
+
   // tracking which line number we are on.
   int lineNumber = 0;
+
   while (getline(sourceFile, line))
   {
+    // lineNumber starts at zero, so increment it here.
     lineNumber++;
     if (line.length() == 0)
     {
@@ -59,10 +62,13 @@ Game::Game(string filename)
     case '@': // place
     {
       // line = "@ Apartment You are in your dingey 1 bedroom 1 bath apartment."
+      // find the space after the place name.
       int indexAfterName = line.find(" ", 2);
+      // cut the place name out of the line.
       string name = line.substr(2, indexAfterName - 2);
+      // cut the description out of the line.
       string desc = line.substr(indexAfterName + 1);
-      // save this place by name.
+      // create a place with name and description and save it in the places map by name.
       places[name] = new Place(name, desc);
       // if we haven't remembered the first place yet, do it now.
       if (startPlace == nullptr)
@@ -75,20 +81,24 @@ Game::Game(string filename)
     case '^': // exit
     {
       // line = "^ Apartment N Hallway"
+      // find the space after the place name.
       int indexAfterName = line.find(" ", 2);
+      // cut the place name out of the line.
       string placeName = line.substr(2, indexAfterName - 2);
+      // cut the direction out of the line and convert it to lowercase.
       char dir = char(tolower(line[indexAfterName + 1]));
+      // cut the destination out of the line.
       string destination = line.substr(indexAfterName + 3);
       // cout << "Found a direction from " << placeName << " " << dir << " to " << destination << " on line " << lineNumber << endl;
 
       // find the places, printing message if they aren't found.
-      auto src = places[placeName];
+      Place *src = places[placeName];
       if (!src)
       {
         cout << "Place " << placeName << " not found for exit on line " << lineNumber << endl;
         break;
       }
-      auto dst = places[destination];
+      Place *dst = places[destination];
       if (!dst)
       {
         cout << "Place " << destination << " not found for exit on line " << lineNumber << endl;
@@ -103,31 +113,37 @@ Game::Game(string filename)
     case '$': // thing
     {
       // line = "$ Mailbox You see the mailbox"
+      // find the space after the thing name.
       int indexAfterName = line.find(" ", 2);
+      // cut the thing name out of the line.
       string name = line.substr(2, indexAfterName - 2);
+      // cut the description out of the line.
       string desc = line.substr(indexAfterName + 1);
       // cout << "Found a thing " << name << " on line " << lineNumber << endl;
 
-      // save this thing by name.
+      // create a new thing with the name and description and save it in the things map by name.
       things[name] = new Thing(name, desc);
     }
     break;
     case '!': // thing in place
     {
       // line = "! Key Hallway"
+      // find the space after the thing name.
       int indexAfterName = line.find(" ", 2);
+      // cut the thing name out of the line.
       string thingName = line.substr(2, indexAfterName - 2);
+      // cut the place name out of the line.
       string placeName = line.substr(indexAfterName + 1);
       // cout << "Placing " << thingName << " in " << placeName << " on line " << lineNumber << endl;
 
       // get the place and thing, printing message if they aren't found.
-      auto place = places[placeName];
-      auto thing = things[thingName];
+      Place *place = places[placeName];
       if (!place)
       {
         cout << "Place " << placeName << " not found for thing " << thingName << " on line " << lineNumber << endl;
         break;
       }
+      Thing *thing = things[thingName];
       if (!thing)
       {
         cout << "Thing " << thingName << " not found for place " << placeName << " on line " << lineNumber << endl;
@@ -150,32 +166,41 @@ Game::Game(string filename)
   this->player = new Player(startPlace);
 }
 
+// the main game loop
 void Game::run()
 {
   bool gameOver = false;
   while (!gameOver)
   {
-    // cout << "You are in " << this->player->getLocation()->getName() << endl;
+    // print the prompt
     cout << "> ";
+
+    // get the user's input
     string input;
     getline(cin, input);
-    if (input == "n" || input == "s" || input == "e" || input == "w")
+
+    if (input == "q")
     {
+      // quit the game
+      gameOver = true;
+    }
+    else if (input == "n" || input == "s" || input == "e" || input == "w")
+    {
+      // move the player in the direction
       char direction = input[0];
       if (this->player->move(direction))
       {
         cout << "You are in " << this->player->getLocation()->getName() << endl;
       }
     }
-    else if (input == "q")
-    {
-      gameOver = true;
-    }
     else if (input == "d" || input == "desc" || input == "look")
     {
-      auto place = this->player->getLocation();
+      // describe the current location
+      Place *place = this->player->getLocation();
       cout << place->getDesc() << endl;
-      auto thing = place->getThings();
+
+      // print the list of things in this place.
+      Thing *thing = place->getThings();
       if (thing != nullptr)
       {
         cout << "You see:" << endl;
@@ -188,9 +213,10 @@ void Game::run()
     }
     else if (input.substr(0, 5) == "take ")
     {
+      // take an object
       string thingName = to_lower(input.substr(5));
-      auto place = this->player->getLocation();
-      auto thing = place->getThings();
+      Place *place = this->player->getLocation();
+      Thing *thing = place->getThings();
       int foundThing = 0;
       while (!foundThing && thing != nullptr)
       {
@@ -213,8 +239,9 @@ void Game::run()
     }
     else if (input.substr(0, 5) == "drop ")
     {
+      // drop an object
       string thingName = to_lower(input.substr(5));
-      auto thing = this->player->getThings();
+      Thing *thing = this->player->getThings();
       int foundThing = 0;
       while (!foundThing && thing != nullptr)
       {
@@ -237,7 +264,8 @@ void Game::run()
     }
     else if (input == "i" || input == "invent" || input == "inventory")
     {
-      auto thing = this->player->getThings();
+      // list the things the player is carrying
+      Thing *thing = this->player->getThings();
       if (thing == nullptr)
       {
         cout << "You are not carrying anything." << endl;
@@ -254,6 +282,7 @@ void Game::run()
     }
     else if (input == "?" || input == "help")
     {
+      // print the help message
       cout << "n, s, e, w - move in a direction" << endl;
       cout << "d, desc, look - describe the current location" << endl;
       cout << "take - take an object" << endl;
@@ -263,7 +292,8 @@ void Game::run()
     }
     else
     {
-      cout << "Enter a command..." << endl;
+      // prompt again if the command is not recognized
+      cout << "Enter a command... (? for help)" << endl;
     }
   } // while !gameOver
 }
