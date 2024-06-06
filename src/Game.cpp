@@ -98,7 +98,10 @@ Game::Game(string filename)
         cout << "Place " << placeName << " not found for exit on line " << lineNumber << endl;
         break;
       }
+      // if cannot find place, state it could not be found and break loop
+
       Place *dst = places[destination];
+      // find destination, printing message if they arent found
       if (!dst)
       {
         cout << "Place " << destination << " not found for exit on line " << lineNumber << endl;
@@ -113,30 +116,30 @@ Game::Game(string filename)
     case '$': // thing
     {
       // line = "$ Mailbox You see the mailbox"
-      // find the space after the thing name.
+      // find the space after the thing name
       int indexAfterName = line.find(" ", 2);
-      // cut the thing name out of the line.
+      // cut the thing name out of the line
       string name = line.substr(2, indexAfterName - 2);
-      // cut the description out of the line.
+      // cut the description out of the line
       string desc = line.substr(indexAfterName + 1);
       // cout << "Found a thing " << name << " on line " << lineNumber << endl;
 
-      // create a new thing with the name and description and save it in the things map by name.
+      // create a new thing with the name and description and save it in the things map by name
       things[name] = new Thing(name, desc);
     }
     break;
     case '!': // thing in place
     {
       // line = "! Key Hallway"
-      // find the space after the thing name.
+      // find the space after the thing name
       int indexAfterName = line.find(" ", 2);
-      // cut the thing name out of the line.
+      // cut the thing name out of the line
       string thingName = line.substr(2, indexAfterName - 2);
-      // cut the place name out of the line.
+      // cut the place name out of the line
       string placeName = line.substr(indexAfterName + 1);
       // cout << "Placing " << thingName << " in " << placeName << " on line " << lineNumber << endl;
 
-      // get the place and thing, printing message if they aren't found.
+      // get the place and thing, printing message if they aren't found
       Place *place = places[placeName];
       if (!place)
       {
@@ -162,7 +165,7 @@ Game::Game(string filename)
   // close the file
   sourceFile.close();
 
-  // start with player in the first place we found.
+  // start with player in the first place we found
   this->player = new Player(startPlace);
 }
 
@@ -199,7 +202,7 @@ void Game::run()
       Place *place = this->player->getLocation();
       cout << place->getDesc() << endl;
 
-      // print the list of things in this place.
+      // print the list of things in this place
       Thing *thing = place->getThings();
       if (thing != nullptr)
       {
